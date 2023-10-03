@@ -1,5 +1,9 @@
 const ProductDetails = () => {
-  return <div>ProductDetails</div>;
+  return (
+    <div>
+      <h1>Hello world</h1>
+    </div>
+  );
 };
 
 export default ProductDetails;
