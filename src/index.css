@@ -9,6 +9,10 @@ body {
   min-height: 100vh;
 }
 
+.space {
+  margin-bottom: 30px;
+}
+
 label {
   font-weight: 600;
 }
@@ -18,9 +22,9 @@ label {
   width: 100%;
   background-color: hsla(226, 92%, 95%, 0.775);
   padding: 10px;
-  margin-bottom: 20px;
   border-radius: 4px;
   font-size: 18px;
   margin-top: 7px;
   transition: transform 0.2s ease-in-out;
+  border: 1px solid gray;
 }

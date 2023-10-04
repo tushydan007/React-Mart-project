@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect } from "react";
+import { DevTool } from "@hookform/devtools";
+import logo from "../assets/amazon.jpg";
 
 const RegistrationForm = () => {
   const schema = yup.object({
@@ -16,6 +18,7 @@ const RegistrationForm = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
     reset,
   } = useForm({
@@ -41,15 +44,16 @@ const RegistrationForm = () => {
 
   return (
     <div
-      className="w-3/6 m-auto shadow-xl border mt-10 mb-20 p-10 rounded-lg"
+      className="w-3/6 m-auto shadow-2xl border mt-10 mb-20 p-10 rounded-lg"
       id="register"
     >
+      <img src={logo} alt="logo" className="w-40 mx-auto rounded-md mb-4" />
       <h3 className="text-center text-2xl font-bold mb-10">
         Create an account
       </h3>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="space">
           <label htmlFor="firstName">First Name</label>
           <input type="text" id="name" {...register("firstName")} autoFocus />
           {errors.firstName && (
@@ -59,7 +63,7 @@ const RegistrationForm = () => {
           )}
         </div>
 
-        <div>
+        <div className="space">
           <label htmlFor="lastName">Last Name</label>
           <input type="text" id="lastName" {...register("lastName")} />
           {errors.lastName && (
@@ -69,7 +73,7 @@ const RegistrationForm = () => {
           )}
         </div>
 
-        <div>
+        <div className="space">
           <label htmlFor="email">E-mail</label>
           <input type="text" id="email" {...register("email")} />
           {errors.email && (
@@ -79,7 +83,7 @@ const RegistrationForm = () => {
           )}
         </div>
 
-        <div>
+        <div className="space">
           <label htmlFor="userName">Username</label>
           <input type="text" id="userName" {...register("userName")} />
           {errors.userName && (
@@ -89,7 +93,7 @@ const RegistrationForm = () => {
           )}
         </div>
 
-        <div>
+        <div className="space">
           <label htmlFor="password">Password</label>
           <input type="password" id="password" {...register("password")} />
           {errors.password && (
@@ -100,7 +104,7 @@ const RegistrationForm = () => {
         </div>
 
         <button //github.com/tushydan007/React-Mart-project.git
-          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00]"
+          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00] cursor-pointer mt-10"
           disabled={!isDirty || !isValid || isSubmitting}
         >
           Register
@@ -113,6 +117,7 @@ const RegistrationForm = () => {
           <span className="text-blue-500"> Sign in</span>
         </Link>
       </p>
+      <DevTool control={control} />
     </div>
   );
 };
