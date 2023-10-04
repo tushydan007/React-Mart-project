@@ -4,6 +4,7 @@ import { getCollections } from "../redux/features/categoryCard/collectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import CategoryCard from "./../components/CategoryCard";
 import { Link } from "react-router-dom";
+import BackToTop from "./../components/BackToTop";
 
 const Landing = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Landing = () => {
   return (
     <div>
       <CustomCarousel />
-      <section className="pt-14 bg-[#E3E6E6] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center ">
+      <section className="p-10 bg-[#E3E6E6] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center ">
         {collections.map((collection) => (
           <CategoryCard key={collection.id} collection={collection} />
         ))}
@@ -51,9 +52,7 @@ const Landing = () => {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center text-white font-semibold text-lg bg-[#485769]">
-        <p className="cursor-pointer">Back to top</p>
-      </div>
+      <BackToTop />
     </div>
   );
 };
