@@ -10,13 +10,7 @@ import CustomCarouselImage from "./CustomCarouselImage";
 
 const CustomCarousel = () => {
   return (
-    <Carousel
-      infiniteLoop
-      autoFocus
-      autoPlay
-      showThumbs={false}
-      width={"100vw"}
-    >
+    <Carousel infiniteLoop autoFocus autoPlay showThumbs={false}>
       <CustomCarouselImage imgName={phoy} />
       <CustomCarouselImage imgName={croy} />
       <CustomCarouselImage imgName={roy} />

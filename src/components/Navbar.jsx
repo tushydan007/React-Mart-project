@@ -16,7 +16,7 @@ const Navbar = () => {
             <img
               src={siteLogo}
               alt="logo"
-              className="w-full object-cover p-1 border-none outline-none"
+              className="w-full object-cover p-1 border-none outline-none rounded-md shadow-xl"
             />
           </Link>
         </figure>
