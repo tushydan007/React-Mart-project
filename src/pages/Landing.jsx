@@ -26,7 +26,7 @@ const Landing = () => {
   return (
     <div>
       <CustomCarousel />
-      <section className="p-10 bg-[#E3E6E6] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center ">
+      <section className="p-10 py-20 bg-[#E3E6E6] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center ">
         {collections.map((collection) => (
           <CategoryCard key={collection.id} collection={collection} />
         ))}

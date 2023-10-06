@@ -6,8 +6,10 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { BsCart3 } from "react-icons/bs";
 import { HiChevronDown } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const { cartItems } = useSelector((state) => state.cart);
   return (
     <header className="w-screen">
       <nav className="w-full bg-[#131921] flex items-center justify-center gap-20 p-2">
@@ -64,7 +66,7 @@ const Navbar = () => {
             <BsCart3 color="#fff" size={25} />
           </Link>
           <span className="bg-[#F3A847] rounded-full p-1 text-xs absolute bottom-4 left-3 text-black font-bold">
-            0
+            {cartItems.length}
           </span>
         </div>
       </nav>
