@@ -10,11 +10,27 @@ import NotFound from "./pages/NotFound";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+
+axios.interceptors.response.use(null, (error) => {
+  const expectedError =
+    error.response &&
+    error.response.status >= 400 &&
+    error.response.status < 500;
+  if (expectedError) {
+    return Promise.reject(error);
+  }
+  console.log(error);
+  toast.error("An Unexpected error occured while processing");
+});
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer />
         <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />

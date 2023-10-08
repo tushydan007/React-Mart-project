@@ -28,4 +28,5 @@ label {
   margin-top: 7px;
   transition: transform 0.2s ease-in-out;
   border: 1px solid gray;
+  font-weight: 500;
 }

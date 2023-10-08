@@ -1,15 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/amazon.jpg";
 import Joi from "joi";
 import InputField from "../components/InputField";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/features/user/userSlice";
 
-const RegistrationForm = () => {
+const LoginForm = () => {
   const [values, setValues] = useState({
     userName: "",
     password: "",
   });
+
   const [errors, setErrors] = useState({});
+
+  const dispatch = useDispatch();
+  const { isLoading, error, user } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
 
   const schema = Joi.object({
     userName: Joi.string().required().label("Username"),
@@ -19,6 +27,7 @@ const RegistrationForm = () => {
   const validate = () => {
     let fieldErrors = {};
     const result = schema.validate(values, { abortEarly: false });
+
     if (!result.error) return null;
 
     result.error &&
@@ -28,18 +37,44 @@ const RegistrationForm = () => {
     return fieldErrors;
   };
 
+  const userLogin = () => {
+    dispatch(loginUser(values)).then((result) => {
+      if (result.payload) {
+        setValues({});
+        navigate("/");
+      }
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errorsObject = validate();
     if (errorsObject) {
       return setErrors(errorsObject);
     }
-    console.log(values);
+    userLogin();
   };
 
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+  const handleChange = ({ target: input }) => {
+    // let clonedErrors = { ...errors };
+    // let errorMessage = validateOnChange(input);
+    // errorMessage
+    //   ? (clonedErrors[input.name] = errorMessage)
+    //   : delete clonedErrors[input.name];
+
+    //   setErrors(clonedErrors);
+    setValues({ ...values, [input.name]: input.value });
   };
+
+  // const validateOnChange = ({ name, value }) => {
+  //   const obj = { [name]: value };
+  //   const singleSchema = {
+  //     [name]: schema[name],
+  //   };
+
+  //   const { error } = singleSchema.validate(obj);
+  //   return error ? error.details[0].message : null;
+  // };
 
   return (
     <div
@@ -50,6 +85,11 @@ const RegistrationForm = () => {
       <h3 className="text-center text-2xl font-bold mb-10">Sign In</h3>
 
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="text-black bg-red-200 p-2 rounded-md text-base mb-3 font-medium">
+            {error}
+          </div>
+        )}
         <InputField
           name="userName"
           label="Username"
@@ -72,7 +112,7 @@ const RegistrationForm = () => {
           disabled={validate()}
           type="submit"
         >
-          Continue
+          {isLoading ? "Loading..." : "Continue"}
         </button>
       </form>
 
@@ -86,4 +126,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default LoginForm;
