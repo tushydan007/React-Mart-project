@@ -11,7 +11,7 @@ const Cart = () => {
           <CartItem key={item.id} item={item} />
         ))}
       </div>
-      <div className="col-span-3 bg-white rounded-sm shadow-md h-56">
+      <div className="col-span-3 bg-white rounded-md shadow-md h-56">
         <h1 className="border-b border-b-slate-200 text-center p-2 font-semibold">
           CART SUMMARY
         </h1>

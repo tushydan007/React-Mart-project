@@ -45,7 +45,7 @@ const Landing = () => {
           <div className="w-56 m-auto grid place-content-center">
             <p>
               New Customer?{" "}
-              <a href="/register" className="text-blue-300 ">
+              <a href="/register" className="text-blue-500">
                 Start here.
               </a>
             </p>

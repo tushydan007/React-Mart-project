@@ -1,40 +1,45 @@
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useEffect } from "react";
-import { DevTool } from "@hookform/devtools";
 import logo from "../assets/amazon.jpg";
+import Joi from "joi";
+import InputField from "../components/InputField";
+import { useState } from "react";
 
 const RegistrationForm = () => {
-  const schema = yup.object({
-    userName: yup.string().required("Username is required"),
-    password: yup.string().required("Password is required"),
+  const [values, setValues] = useState({
+    userName: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const schema = Joi.object({
+    userName: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
   });
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
-    reset,
-  } = useForm({
-    defaultValues: {
-      userName: "",
-      password: "",
-    },
-    resolver: yupResolver(schema),
-  });
+  const validate = () => {
+    let fieldErrors = {};
+    const result = schema.validate(values, { abortEarly: false });
+    if (!result.error) return null;
 
-  const onSubmit = (data) => {
-    console.log(data);
+    result.error &&
+      result.error.details.forEach((error) => {
+        fieldErrors[error.path[0]] = error.message;
+      });
+    return fieldErrors;
   };
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errorsObject = validate();
+    if (errorsObject) {
+      return setErrors(errorsObject);
     }
-  }, [isSubmitSuccessful, reset]);
+    console.log(values);
+  };
+
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
   return (
     <div
@@ -44,35 +49,28 @@ const RegistrationForm = () => {
       <img src={logo} alt="logo" className="w-40 mx-auto rounded-md mb-4" />
       <h3 className="text-center text-2xl font-bold mb-10">Sign In</h3>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space">
-          <label htmlFor="userName">Username</label>
-          <input
-            type="text"
-            id="userName"
-            {...register("userName")}
-            autoFocus
-          />
-          {errors.userName && (
-            <p className="text-red-500 text-xs italic">
-              {errors.userName.message}
-            </p>
-          )}
-        </div>
+      <form onSubmit={handleSubmit}>
+        <InputField
+          name="userName"
+          label="Username"
+          value={values.userName}
+          onChange={handleChange}
+          error={errors.userName}
+        />
 
-        <div className="space">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" {...register("password")} />
-          {errors.password && (
-            <p className="text-red-500 text-xs italic">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          type="password"
+          name="password"
+          label="Password"
+          value={values.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
 
         <button //github.com/tushydan007/React-Mart-project.git
-          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00] cursor-pointer mt-10"
-          disabled={!isDirty || !isValid || isSubmitting}
+          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00] cursor-pointer mt-10 hover:opacity-80 transition-all duration-500 disabled:bg-yellow-300 disabled:text-slate-500"
+          disabled={validate()}
+          type="submit"
         >
           Continue
         </button>
@@ -84,7 +82,6 @@ const RegistrationForm = () => {
           <span className="text-blue-500"> Sign in</span>
         </Link>
       </p>
-      <DevTool control={control} />
     </div>
   );
 };

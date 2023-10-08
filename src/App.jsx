@@ -6,17 +6,10 @@ import LoginForm from "./pages/LoginForm";
 import ProductDetails from "./pages/ProductDetails";
 import Products from "./pages/Products";
 import RegistrationForm from "./pages/RegistrationForm";
-
 import NotFound from "./pages/NotFound";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
-// import {
-//   QueryClient,
-//   QueryClientProvider,
-// } from "@tanstack/react-query-devtools";
-
-// const queryClient = new QueryClient();
 
 function App() {
   return (

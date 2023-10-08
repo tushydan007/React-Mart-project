@@ -7,7 +7,7 @@ const ProductDetails = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const {
-    product: { id, title, images, reviews, price, description },
+    product: { title, images, reviews, price, description },
     isLoading,
     error,
   } = useSelector((state) => state.product);

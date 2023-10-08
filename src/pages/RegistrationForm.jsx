@@ -1,46 +1,54 @@
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useEffect } from "react";
-import { DevTool } from "@hookform/devtools";
+import { useState } from "react";
+import Joi from "joi";
 import logo from "../assets/amazon.jpg";
+import InputField from "./../components/InputField";
 
 const RegistrationForm = () => {
-  const schema = yup.object({
-    firstName: yup.string().required("First Name is required"),
-    lastName: yup.string().required("Last Name is required"),
-    email: yup.string().email().required("Email is required"),
-    userName: yup.string().required("User Name is required"),
-    password: yup.string().required("Password is required"),
+  const [data, setData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    userName: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const schema = Joi.object({
+    firstName: Joi.string().required().label("First Name"),
+    lastName: Joi.string().required().label("Last Name"),
+    email: Joi.string()
+      .email({ tlds: { allow: ["com", "net"] } })
+      .required()
+      .label("Email"),
+    userName: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
   });
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
-    reset,
-  } = useForm({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      userName: "",
-      password: "",
-    },
-    resolver: yupResolver(schema),
-  });
+  const validateAll = () => {
+    let localErrors = {};
+    const result = schema.validate(data, { abortEarly: false });
+    if (!result.error) return null;
 
-  const onSubmit = (data) => {
-    console.log(data);
+    result.error &&
+      result.error.details.forEach((error) => {
+        localErrors[error.path[0]] = error.message;
+      });
+    return localErrors;
   };
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errorsObject = validateAll();
+    if (errorsObject) {
+      return setErrors(errorsObject);
     }
-  }, [isSubmitSuccessful, reset]);
+    console.log(data);
+  };
 
   return (
     <div
@@ -52,60 +60,52 @@ const RegistrationForm = () => {
         Create an account
       </h3>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space">
-          <label htmlFor="firstName">First Name</label>
-          <input type="text" id="name" {...register("firstName")} autoFocus />
-          {errors.firstName && (
-            <p className="text-red-500 text-xs italic">
-              {errors.firstName.message}
-            </p>
-          )}
-        </div>
+      <form onSubmit={handleSubmit}>
+        <InputField
+          name="firstName"
+          label="First Name"
+          value={data.firstName}
+          onChange={handleChange}
+          error={errors.firstName}
+        />
 
-        <div className="space">
-          <label htmlFor="lastName">Last Name</label>
-          <input type="text" id="lastName" {...register("lastName")} />
-          {errors.lastName && (
-            <p className="text-red-500 text-xs italic">
-              {errors.lastName.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          name="lastName"
+          label="Last Name"
+          value={data.lastName}
+          onChange={handleChange}
+          error={errors.lastName}
+        />
 
-        <div className="space">
-          <label htmlFor="email">E-mail</label>
-          <input type="text" id="email" {...register("email")} />
-          {errors.email && (
-            <p className="text-red-500 text-xs italic">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          name="email"
+          label="Email"
+          value={data.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
 
-        <div className="space">
-          <label htmlFor="userName">Username</label>
-          <input type="text" id="userName" {...register("userName")} />
-          {errors.userName && (
-            <p className="text-red-500 text-xs italic">
-              {errors.userName.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          name="userName"
+          label="Username"
+          value={data.userName}
+          onChange={handleChange}
+          error={errors.userName}
+        />
 
-        <div className="space">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" {...register("password")} />
-          {errors.password && (
-            <p className="text-red-500 text-xs italic">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          type="password"
+          name="password"
+          label="Password"
+          value={data.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
 
         <button //github.com/tushydan007/React-Mart-project.git
-          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00] cursor-pointer mt-10"
-          disabled={!isDirty || !isValid || isSubmitting}
+          className="w-full rounded-lg p-3 font-semibold text-center m-auto bg-[#F7CA00] cursor-pointer mt-10 hover:opacity-80 transition-all duration-500 disabled:bg-yellow-300 disabled:text-slate-500"
+          disabled={validateAll()}
+          type="submit"
         >
           Register
         </button>
@@ -117,7 +117,6 @@ const RegistrationForm = () => {
           <span className="text-blue-500"> Sign in</span>
         </Link>
       </p>
-      <DevTool control={control} />
     </div>
   );
 };
