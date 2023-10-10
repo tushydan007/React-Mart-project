@@ -13,6 +13,8 @@ import Footer from "./components/Footer";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import ConfirmRegistration from "./pages/ConfirmRegistration";
+import ConifrmationSuccessful from "./pages/ConifrmationSuccessful";
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -40,6 +42,14 @@ function App() {
           <Route path="/categories/:id/products" element={<Products />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
           <Route path="/register" element={<RegistrationForm />} />
+          <Route
+            path="/confirm-registration"
+            element={<ConfirmRegistration />}
+          />
+          <Route
+            path="/activate/:uid/:token"
+            element={<ConifrmationSuccessful />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

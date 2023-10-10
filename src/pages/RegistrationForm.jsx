@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Joi from "joi";
 import logo from "../assets/amazon.jpg";
 import InputField from "./../components/InputField";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../redux/features/user/userSlice";
 
 const RegistrationForm = () => {
   const [data, setData] = useState({
@@ -13,6 +15,10 @@ const RegistrationForm = () => {
     password: "",
   });
   const [errors, setErrors] = useState({});
+
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const schema = Joi.object({
     firstName: Joi.string().required().label("First Name"),
@@ -41,13 +47,22 @@ const RegistrationForm = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
+  const userRegister = () => {
+    dispatch(registerUser(data)).then((result) => {
+      if (result.payload) {
+        setData({});
+        navigate("/confirmRegistration");
+      }
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errorsObject = validateAll();
     if (errorsObject) {
       return setErrors(errorsObject);
     }
-    console.log(data);
+    userRegister();
   };
 
   return (
@@ -61,6 +76,11 @@ const RegistrationForm = () => {
       </h3>
 
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="text-black bg-red-200 p-2 rounded-md text-base mb-3 font-medium">
+            {error}
+          </div>
+        )}
         <InputField
           name="firstName"
           label="First Name"
@@ -107,7 +127,7 @@ const RegistrationForm = () => {
           disabled={validateAll()}
           type="submit"
         >
-          Register
+          {isLoading ? "Loading..." : "Register"}
         </button>
       </form>
 

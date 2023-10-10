@@ -15,7 +15,7 @@ const LoginForm = () => {
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
-  const { isLoading, error, user } = useSelector((state) => state.user);
+  const { isLoading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -66,15 +66,15 @@ const LoginForm = () => {
     setValues({ ...values, [input.name]: input.value });
   };
 
-  // const validateOnChange = ({ name, value }) => {
-  //   const obj = { [name]: value };
-  //   const singleSchema = {
-  //     [name]: schema[name],
-  //   };
+  const validateOnChange = ({ name, value }) => {
+    const obj = { [name]: value };
+    const singleSchema = {
+      [name]: schema[name],
+    };
 
-  //   const { error } = singleSchema.validate(obj);
-  //   return error ? error.details[0].message : null;
-  // };
+    const { error } = singleSchema.validate(obj);
+    return error ? error.details[0].message : null;
+  };
 
   return (
     <div
@@ -119,7 +119,7 @@ const LoginForm = () => {
       <p className="mt-5">
         New to React Mart?
         <Link to="/login">
-          <span className="text-blue-500"> Sign in</span>
+          <span className="text-blue-500"> Sign Up</span>
         </Link>
       </p>
     </div>

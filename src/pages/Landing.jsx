@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CategoryCard from "./../components/CategoryCard";
 import { Link } from "react-router-dom";
 import BackToTop from "./../components/BackToTop";
+import Loading from "../components/Loading";
 
 const Landing = () => {
   const dispatch = useDispatch();
@@ -17,14 +18,14 @@ const Landing = () => {
   }, []);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
   if (!isLoading && error) {
     return <h1>{error.message}</h1>;
   }
 
   return (
-    <div>
+    <div className="flex-1">
       <CustomCarousel />
       <section className="p-10 py-20 bg-[#E3E6E6] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center ">
         {collections.map((collection) => (

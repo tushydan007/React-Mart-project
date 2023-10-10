@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../redux/features/products/productSlice";
 import { useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import Loading from "../components/Loading";
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const Products = () => {
   }, [id]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
   if (!isLoading && error) {
     return <h1>{error.message}</h1>;

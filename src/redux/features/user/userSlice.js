@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 export const loginUser = createAsyncThunk("users/login", (obj) => {
   return axios
@@ -31,11 +32,21 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
+  newlyRegisteredUser: null,
+  loggedInUser: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
+  reducers: {
+    getAndDecodeUser: (state) => {
+      const token = localStorage.getItem("token");
+      const user = jwtDecode(token);
+      state.loggedInUser = user;
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -57,7 +68,28 @@ export const userSlice = createSlice({
           state.error = action.error.message;
         }
       });
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.newlyRegisteredUser = null;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.newlyRegisteredUser = action.payload;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.newlyRegisteredUser = null;
+        if (action.error.message === "Request failed with status code 400") {
+          state.error = "User already registered";
+        } else {
+          state.error = action.error.message;
+        }
+      });
   },
 });
 
+export const { getAndDecodeUser } = userSlice.actions;
 export default userSlice.reducer;
