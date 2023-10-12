@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/amazon.jpg";
 import Joi from "joi";
 import InputField from "../components/InputField";
@@ -18,6 +18,9 @@ const LoginForm = () => {
   const { isLoading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const schema = Joi.object({
     userName: Joi.string().required().label("Username"),
@@ -41,7 +44,7 @@ const LoginForm = () => {
     dispatch(loginUser(values)).then((result) => {
       if (result.payload) {
         setValues({});
-        navigate("/");
+        navigate("/", { replace: true });
       }
     });
   };

@@ -17,7 +17,7 @@ const Cart = () => {
   return (
     <>
       <h1 className="text-black font-bold text-lg text-center">
-        Your Cart Items
+        {cartItems.length === 0 ? "Your Cart is Empty" : "Your Cart Items"}
       </h1>
       <div className="grid grid-cols-12 px-8 py-10 bg-[#e3e6e6]  gap-x-10">
         <div className="col-span-9 bg-white rounded-sm shadow-md flex-1">

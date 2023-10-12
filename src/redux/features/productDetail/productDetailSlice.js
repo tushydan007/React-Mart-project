@@ -1,16 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getProduct = createAsyncThunk("product/getProduct", (id) => {
-  return axios
-    .get(`http://127.0.0.1:8000/store/products/${id}/`)
-    .then((response) => response.data);
+export const getProduct = createAsyncThunk("product/getProduct", async (id) => {
+  const { data } = await axios.get(
+    `http://127.0.0.1:8000/store/products/${id}/`
+  );
+  return data;
 });
 
 const initialState = {
-  product: {},
+  product: null,
   isLoading: false,
-  error: "",
+  error: null,
 };
 
 export const productSlice = createSlice({
@@ -18,16 +19,17 @@ export const productSlice = createSlice({
   initialState,
   extraReducers: {
     [getProduct.pending]: (state) => {
-      state.product = {};
+      state.product = null;
       state.isLoading = true;
+      state.error = null;
     },
     [getProduct.fulfilled]: (state, action) => {
       state.product = action.payload;
       state.isLoading = false;
-      state.error = "";
+      state.error = null;
     },
     [getProduct.rejected]: (state, action) => {
-      state.product = {};
+      state.product = null;
       state.isLoading = false;
       state.error = action.error.message;
     },

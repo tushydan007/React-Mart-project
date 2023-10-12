@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Cart from "./pages/Cart";
-import CheckOut from "./pages/CheckOut";
 import LoginForm from "./pages/LoginForm";
 import ProductDetails from "./pages/ProductDetails";
 import Products from "./pages/Products";
@@ -15,6 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import ConfirmRegistration from "./pages/ConfirmRegistration";
 import ConifrmationSuccessful from "./pages/ConifrmationSuccessful";
+import ProtectedRouteCheckout from "./components/ProtectedRouteCheckout";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getAndDecodeUser } from "./redux/features/user/userSlice";
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -28,7 +31,17 @@ axios.interceptors.response.use(null, (error) => {
   toast.error("An Unexpected error occured while processing");
 });
 
+axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    try {
+      dispatch(getAndDecodeUser());
+    } catch (error) {
+      toast.error(error);
+    }
+  }, [dispatch]);
   return (
     <>
       <BrowserRouter>
@@ -37,7 +50,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/checkout" element={<ProtectedRouteCheckout />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/categories/:id/products" element={<Products />} />
           <Route path="/product/:productId" element={<ProductDetails />} />

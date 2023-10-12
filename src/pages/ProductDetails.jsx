@@ -6,16 +6,12 @@ import { getProduct } from "../redux/features/productDetail/productDetailSlice";
 const ProductDetails = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
-  const {
-    product: { title, images, reviews, price, description },
-    isLoading,
-    error,
-  } = useSelector((state) => state.product);
+  const { product, isLoading, error } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getProduct(productId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId]);
+  }, [productId, dispatch]);
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -29,24 +25,26 @@ const ProductDetails = () => {
       <div className="flex pt-10 pb-20 px-10 gap-5">
         <figure className="flex-1 rounded-md h-96">
           <img
-            src={images[0].image}
-            alt={title}
+            src={product?.images[0].image}
+            alt={product?.title}
             className="w-full h-full object-contain"
           />
         </figure>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-5">{title}</h1>
-          <h2 className="text-xl font-bold">Price: ${price}</h2>
-          <h2 className="text-xl font-normal">Description: {description}</h2>
+          <h1 className="text-3xl font-bold mb-5">{product?.title}</h1>
+          <h2 className="text-xl font-bold">Price: ${product?.price}</h2>
+          <h2 className="text-xl font-normal">
+            Description: {product?.description}
+          </h2>
         </div>
       </div>
       <div className="pt-16 pb-10 px-10">
         <h1 className="text-xl font-bold italic mb-5">Reviews</h1>
-        {reviews?.length === 0 && (
+        {product?.reviews?.length === 0 && (
           <p>There are no reviews for this product yet</p>
         )}
         <div className="grid gap-5">
-          {reviews?.map((review) => (
+          {product?.reviews?.map((review) => (
             <div key={review.id}>
               <h2 className="text-lg font-semibold">{review.customer_name}</h2>
               <p>{review.description}</p>
