@@ -1,15 +1,21 @@
 /* eslint-disable react/prop-types */
 import { FaTrashAlt } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { HiPlus } from "react-icons/hi";
+import { AiOutlineMinus } from "react-icons/ai";
 import {
   decreaseCount,
   increaseCount,
   removeFromCart,
+  updateCartItem,
 } from "../redux/features/cart/cartSlice";
 
 const CartItem = ({ item }) => {
-  const { images, title, price, quantity_incart, manufacturer } = item;
+  const { images, title, price, manufacturer, quantity } = item;
+
   const dispatch = useDispatch();
+
+  const { idOfCart } = useSelector((state) => state.cart);
 
   return (
     <>
@@ -30,6 +36,9 @@ const CartItem = ({ item }) => {
               </p>
             </div>
           </div>
+          <p className="font-semibold text-lg">
+            Item Total: {price * quantity}
+          </p>
           <div className="">
             <p className="font-semibold text-lg">$ {price}</p>
           </div>
@@ -49,21 +58,23 @@ const CartItem = ({ item }) => {
           </div>
           <div className="flex gap-5 justify-center items-center">
             <button
-              className="w-10 h-10 bg-[#FFD978] rounded-md shadow-md text-2xl font-bold"
+              className="w-10 h-10 bg-[#FFD978] rounded-md shadow-md text-2xl font-bold flex items-center justify-center"
               onClick={() => {
-                dispatch(decreaseCount(item));
+                if (quantity === 1) {
+                  dispatch(removeFromCart(item));
+                } else {
+                  dispatch(decreaseCount(item));
+                }
               }}
             >
-              -
+              <AiOutlineMinus />
             </button>
-            <span className="font-semibold text-xl">{quantity_incart}</span>
+            <span className="font-semibold text-xl">{quantity}</span>
             <button
-              className="w-10 h-10 bg-[#FFD978] rounded-md shadow-md text-2xl font-bold"
-              onClick={() => {
-                dispatch(increaseCount(item));
-              }}
+              className="w-10 h-10 bg-[#FFD978] rounded-md shadow-md text-2xl font-bold flex items-center justify-center"
+              onClick={() => dispatch(increaseCount(item))}
             >
-              +
+              <HiPlus />
             </button>
           </div>
         </div>

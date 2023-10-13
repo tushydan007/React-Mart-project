@@ -2,11 +2,16 @@
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "./../components/CartItem";
 import { useEffect } from "react";
-import { addCartItemsTotal } from "../redux/features/cart/cartSlice";
+import {
+  addCartItemsTotal,
+  generateCartId,
+} from "../redux/features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, cartTotal } = useSelector((state) => state.cart);
+  const { cartItems, cartTotal, itemCount } = useSelector(
+    (state) => state.cart
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,7 +27,7 @@ const Cart = () => {
       <div className="grid grid-cols-12 px-8 py-10 bg-[#e3e6e6]  gap-x-10">
         <div className="col-span-9 bg-white rounded-sm shadow-md flex-1">
           {cartItems.map((item) => (
-            <CartItem key={item.id} item={item} />
+            <CartItem key={item.id} item={item} count={itemCount} />
           ))}
         </div>
         <div className="col-span-3 bg-white rounded-md shadow-md h-56">
@@ -31,7 +36,7 @@ const Cart = () => {
           </h1>
           <div className="py-1 px-2 w-full">
             <div className="text-xl font-semibold flex items-center justify-between mt-4 mb-4">
-              <p>Subtotal</p>
+              <p>Cart Total :</p>
               <p>$ {cartTotal}</p>
             </div>
             <p className="py-1">Delivery fees not included yet</p>

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../redux/features/productDetail/productDetailSlice";
+import Loading from "./../components/Loading";
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -14,7 +15,7 @@ const ProductDetails = () => {
   }, [productId, dispatch]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
   if (!isLoading && error) {
     return <h1>{error.message}</h1>;

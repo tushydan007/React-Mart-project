@@ -4,6 +4,7 @@ import { getProducts } from "../redux/features/products/productSlice";
 import { useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import Loading from "../components/Loading";
+import { generateCartId } from "../redux/features/cart/cartSlice";
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,11 @@ const Products = () => {
     dispatch(getProducts(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    dispatch(generateCartId());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return <Loading />;
