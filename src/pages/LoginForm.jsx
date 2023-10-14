@@ -44,7 +44,7 @@ const LoginForm = () => {
     dispatch(loginUser(values)).then((result) => {
       if (result.payload) {
         setValues({});
-        navigate("/", { replace: true });
+        window.location = "/";
       }
     });
   };

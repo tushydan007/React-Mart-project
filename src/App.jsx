@@ -18,6 +18,8 @@ import ProtectedRouteCheckout from "./components/ProtectedRouteCheckout";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getAndDecodeUser } from "./redux/features/user/userSlice";
+import ScrollToTop from "./components/ScrollToTop";
+import Logout from "./pages/Logout";
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -31,7 +33,8 @@ axios.interceptors.response.use(null, (error) => {
   toast.error("An Unexpected error occured while processing");
 });
 
-axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+axios.defaults.headers.common["Authorization"] =
+  "JWT" + " " + localStorage.getItem("token");
 
 function App() {
   const dispatch = useDispatch();
@@ -42,11 +45,13 @@ function App() {
       toast.error(error);
     }
   }, [dispatch]);
+
   return (
     <>
       <BrowserRouter>
         <ToastContainer />
         <Navbar />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/cart" element={<Cart />} />
@@ -55,6 +60,7 @@ function App() {
           <Route path="/categories/:id/products" element={<Products />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
           <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/logout" element={<Logout />} />
           <Route
             path="/confirm-registration"
             element={<ConfirmRegistration />}

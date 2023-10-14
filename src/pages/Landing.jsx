@@ -6,16 +6,25 @@ import CategoryCard from "./../components/CategoryCard";
 import { Link } from "react-router-dom";
 import BackToTop from "./../components/BackToTop";
 import Loading from "../components/Loading";
+import { getLoggedInUser } from "../redux/features/user/userSlice";
 
 const Landing = () => {
   const dispatch = useDispatch();
   const { collections, isLoading, error } = useSelector(
     (state) => state.category
   );
+  const { loggedInUser } = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(getCollections());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      dispatch(getLoggedInUser());
+    }
+  }, [dispatch, loggedInUser]);
 
   if (isLoading) {
     return <Loading />;

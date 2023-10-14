@@ -14,6 +14,11 @@ export const loginUser = createAsyncThunk("users/login", (obj) => {
     });
 });
 
+export const getLoggedInUser = createAsyncThunk("user/getUser", async () => {
+  const { data } = await axios.get("http://127.0.0.1:8000/auth/users/me/");
+  return data;
+});
+
 export const registerUser = createAsyncThunk("users/register", (object) => {
   return axios
     .post("http://127.0.0.1:8000/auth/users/", {
@@ -34,6 +39,7 @@ const initialState = {
   error: null,
   newlyRegisteredUser: null,
   loggedInUser: null,
+  reUser: null,
 };
 
 export const userSlice = createSlice({
@@ -67,8 +73,7 @@ export const userSlice = createSlice({
         } else {
           state.error = action.error.message;
         }
-      });
-    builder
+      })
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
         state.newlyRegisteredUser = null;
@@ -87,6 +92,21 @@ export const userSlice = createSlice({
         } else {
           state.error = action.error.message;
         }
+      })
+      .addCase(getLoggedInUser.pending, (state) => {
+        state.isLoading = true;
+        state.reUser = null;
+        state.error = null;
+      })
+      .addCase(getLoggedInUser.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.reUser = payload;
+        state.error = null;
+      })
+      .addCase(getLoggedInUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.reUser = null;
+        state.error = action.error.message;
       });
   },
 });

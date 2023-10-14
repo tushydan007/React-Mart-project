@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const { loggedInUser, reUser } = useSelector((state) => state.user);
+
   return (
     <header className="w-screen">
       <nav className="w-full bg-[#131921] flex items-center justify-center gap-20 p-2">
@@ -51,12 +53,25 @@ const Navbar = () => {
             <HiChevronDown color="gray" />
           </span>
         </div>
-        <div className="cursor-pointer">
-          <Link to="/login">
-            <BsFillPersonFill color="#fff" size={25} />
-            <p className="text-white font-semibold">Sign in</p>
-          </Link>
-        </div>
+        {loggedInUser && (
+          <div className="cursor-pointer">
+            <Link to="/logout">
+              <p className="text-white font-semibold">
+                Hello! {reUser?.username}
+              </p>
+              <p className="text-white font-semibold">Logout</p>
+            </Link>
+          </div>
+        )}
+        {!loggedInUser && (
+          <div className="cursor-pointer">
+            <Link to="/login">
+              <BsFillPersonFill color="#fff" size={25} />
+              <p className="text-white font-semibold">Sign in</p>
+            </Link>
+          </div>
+        )}
+
         <div className="text-white cursor-pointer">
           <p>Returns</p>
           <p className="font-semibold">& Orders</p>
